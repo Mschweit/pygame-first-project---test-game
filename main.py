@@ -11,6 +11,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
+# coordinate system origin is top left corner 
 playerStartLocation = pygame.Vector2(windowWidth / 2, windowHeight / 2)
 player_pos = playerStartLocation
 player_speed = 300 # player speed in px/s
@@ -30,23 +31,24 @@ while running:
 
 
     # draw player
-    pygame.draw.circle(displaySurface, "red", player_pos, )
+    pygame.draw.circle(displaySurface, "red", player_pos,player_size)
 
     # get keys currently pressed
     keys = pygame.key.get_pressed()
 
+    player_displacement = player_speed * dt
+
     # keep player in-bounds
     # distance of player to any bounds is the player location (circle center)
     #   plus the radius of the circle
-    
-    if keys[pygame.K_w] or keys[pygame.K_UP]:
-        player_pos.y -= player_speed * dt
-    if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-        player_pos.y += player_speed * dt
-    if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-        player_pos.x -= player_speed * dt
-    if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-        player_pos.x += player_speed * dt
+    if (keys[pygame.K_w] or keys[pygame.K_UP]) and ((player_pos.y - player_displacement) > player_size):
+        player_pos.y -= player_displacement
+    if (keys[pygame.K_s] or keys[pygame.K_DOWN]) and ((player_pos.y + player_displacement) < windowHeight - player_size):
+        player_pos.y += player_displacement
+    if (keys[pygame.K_a] or keys[pygame.K_LEFT]) and ((player_pos.x - player_displacement) > player_size):
+        player_pos.x -= player_displacement
+    if (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and ((player_pos.x + player_displacement) < windowWidth- player_size):
+        player_pos.x += player_displacement
 
 
     # display player coordinates
